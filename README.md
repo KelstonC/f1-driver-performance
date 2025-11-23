@@ -1,3 +1,3 @@
-# Predicting Race Winners
+# F1 Driver Performance
 
-This is a personal project to try and predict which Formula 1 drivers will win during a Grand Prix weekend!
+This is a personal project.
