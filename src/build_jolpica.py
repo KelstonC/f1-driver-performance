@@ -6,8 +6,9 @@ import argparse
 import pandas as pd
 
 
-BASE_DIR = "/Users/kelstonchen/GitRepos/predicting_race_winners"
+BASE_DIR = "/Users/kelstonchen/GitRepos/f1-driver-performance"
 RAW_DATA = os.path.join(BASE_DIR, 'data', 'raw')
+OUTPUT_DIR = os.path.join(BASE_DIR, 'data', 'intermediate')
 
 logging.basicConfig(
         level=logging.INFO,
@@ -18,7 +19,7 @@ logging.basicConfig(
 
 def save_data(df: pd.DataFrame, endpoint: str) -> None:
     """Export data"""
-    path = os.path.join(BASE_DIR, 'data', 'intermediate', endpoint)
+    path = os.path.join(OUTPUT_DIR, endpoint)
     output = os.path.join(path, endpoint + '.csv')
     
     os.makedirs(path, exist_ok=True)
@@ -47,10 +48,19 @@ def build_data(endpoint: str, key: str) -> pd.DataFrame:
                     season_id = int(race_data[d]['season'])
                     round_id = int(race_data[d]['round'])
                     circuit_id = str(race_data[d]['Circuit']['circuitId'])
+                    locality = str(race_data[d]['Circuit']['Location']['locality'])
+                    country = str(race_data[d]['Circuit']['Location']['country'])
+                    lat = str(race_data[d]['Circuit']['Location']['lat'])
+                    long = str(race_data[d]['Circuit']['Location']['long'])
+                    
                     race_df = pd.json_normalize(race_data[d][key])
                     race_df['season'] = season_id
                     race_df['round'] = round_id
                     race_df['circuit'] = circuit_id
+                    race_df['locality'] = locality
+                    race_df['country'] = country
+                    race_df['lat'] = lat
+                    race_df['long'] = long
 
                     data_list.append(race_df)
 
@@ -72,7 +82,7 @@ def main():
     parser.add_argument(
         "-k",
         "--Key",
-        help="The endpoint key used to parse JSON files. This should be similar to the endpoint itself.",
+        help="The endpoint key used to parse JSON files. This should be similar to the endpoint itself. (e.g., for the 'results' endpoint, the key is 'Results')",
         type=str,
         required=True
     )

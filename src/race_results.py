@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 
-BASE_DIR = "/Users/kelstonchen/GitRepos/predicting_race_winners"
+BASE_DIR = "/Users/kelstonchen/GitRepos/f1-driver-performance"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -15,7 +15,7 @@ logging.basicConfig(
 
 COLUMNS = [
     'position', 
-    # 'points', 
+    'points', 
     'grid', 
     'status', 
     'Driver.driverId', 
@@ -45,7 +45,7 @@ def main():
 
     # Redefine points system, every place get at least 1 point
     # add/subtract points based on difference between start and end position (grid - position)
-    finished = (results['status'] == 'Finished' )
+    finished = (results['status'] == 'Finished')
     results['points'] = (
         (np.abs(results['position'] - results['position'].max()) + 1) 
         + (results['grid'] - results['position'])

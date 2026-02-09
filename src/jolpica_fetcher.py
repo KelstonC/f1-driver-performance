@@ -7,16 +7,33 @@ import logging
 import argparse
 
 
-BASE_DIR = "/Users/kelstonchen/GitRepos/predicting_race_winners"
+BASE_DIR = "/Users/kelstonchen/GitRepos/f1-driver-performance"
 BASE_URL = "https://api.jolpi.ca/ergast/f1"
 SEASONS = [2022, 2023, 2024, 2025]
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="{asctime} - {levelname} - {message}",
+# Set up logging to both console and file
+log_filename = os.path.join(BASE_DIR, 'logs', f'jolpica_fetcher_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
+os.makedirs(os.path.dirname(log_filename), exist_ok=True)
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Formatter
+formatter = logging.Formatter(
+    "{asctime} - {levelname} - {message}",
     style="{",
     datefmt="%Y-%m-%d %H:%M"
-    )
+)
+
+# Console handler
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+# File handler
+file_handler = logging.FileHandler(log_filename)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 class JolpicaFetcher:
     def __init__(
